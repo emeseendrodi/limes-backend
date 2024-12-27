@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.limes.backend.rest.controllers;
+package com.limes.backend.rest.model;
 
 /**
  *
  * @author Mate Forster
  */
-public class UserController {
-    
+public class ProfileModel {
+
 }
