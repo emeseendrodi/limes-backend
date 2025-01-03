@@ -4,6 +4,7 @@
  */
 package com.limes.backend.persistence;
 
+import com.limes.backend.exception.persistence.LimesPersistenceException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
@@ -13,15 +14,22 @@ import java.util.List;
  * @author Mate Forster
  */
 public class NativeSqlServices {
+
     @PersistenceContext
-   static EntityManager em = DatabaseFactory.getEntityManager();
-    
-    public static List<?> executeNativeQueryWithClassEnforce(String sql, Class c){
+    static EntityManager em = DatabaseFactory.getEntityManager();
+
+    public static List<?> executeNativeQueryWithClassEnforce(String sql, Class c) {
         return em.createNativeQuery(sql, c).getResultList();
     }
-    
-    public static int insertNative(String sql){
+
+    public static int insertNative(String sql) throws LimesPersistenceException {
         em.getTransaction().begin();
-        //TODO
+        int rowsChanged = em.createNativeQuery(sql).executeUpdate();
+        switch (rowsChanged) {
+            case 0 -> throw new LimesPersistenceException("Error during native insertion, no rows were affected!");
+            default -> {
+                return rowsChanged;
+            }
+        }      
     }
 }
