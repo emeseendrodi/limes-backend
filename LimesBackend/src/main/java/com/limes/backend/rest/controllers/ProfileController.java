@@ -4,6 +4,7 @@
  */
 package com.limes.backend.rest.controllers;
 
+import com.limes.backend.persistence.NativeSqlServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ public class ProfileController {
     @GetMapping("/profile/data/{username}")
     public String getProfileDataForUser(@PathVariable String username) {
         logger.info(String.format("Request received for user: %s",username));
+        NativeSqlServices.executeNativeQueryWithClassEnforce("", Object.class);
         return username;
     }
 

@@ -25,12 +25,15 @@ public class NativeSqlServices {
     public static int insertNative(String sql) throws LimesPersistenceException {
         em.getTransaction().begin();
         int rowsChanged = em.createNativeQuery(sql).executeUpdate();
-        em.getTransaction().commit();
         switch (rowsChanged) {
-            case 0 -> throw new LimesPersistenceException("Error during native insertion, no rows were affected!");
+            case 0 -> {
+                em.getTransaction().commit();
+                throw new LimesPersistenceException("Error during native insertion, no rows were affected!");
+            }
             default -> {
+                em.getTransaction().commit();
                 return rowsChanged;
             }
-        }      
+        }
     }
 }

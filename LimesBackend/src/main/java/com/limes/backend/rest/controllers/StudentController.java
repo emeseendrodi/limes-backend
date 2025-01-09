@@ -7,9 +7,7 @@ package com.limes.backend.rest.controllers;
 import com.limes.backend.exception.persistence.LimesPersistenceException;
 import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.rest.model.StudentModel;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StudentController {
 
+    protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
+
     @PostMapping("/student")
     public String registerStudent(@RequestBody StudentModel newStudent) {
         try {
-            int studentsInserted = NativeSqlServices.insertNative("insert into student(email,forename,surename,pwd_hash) values('%s','%s','%s','%s'))");
+            int studentsInserted = NativeSqlServices.insertNative(String.format("insert into student(email,forename,surename,pwd_hash) values('%s','%s','%s','%s'))", newStudent.getEmail(), newStudent.getForename(), newStudent.getSurename(), newStudent.getPwd_hash()));
         } catch (LimesPersistenceException ex) {
-            Logger.getLogger(StudentController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } finally {
             return "";
         }
