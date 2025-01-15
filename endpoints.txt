@@ -1,0 +1,98 @@
+Regisztráció:
+	/student/register - POST: register a new student
+		Req:
+			Body:
+				-email: String
+				-pwd: String
+				-surename: String
+				-forename: String
+		Resp:
+			Body:
+				-success: boolean
+				-errorMessage: String
+			
+	/student/login - GET - login an existing student
+		Req:
+			Body:
+				-email: String
+				-pwd: String
+		Resp:
+			Body:
+				-success: boolean
+				-errorMessage: String
+			
+	/student/profile - GET - get profile datas, progression
+		Req:
+			Header:
+				- email: String
+		Resp:
+			Body:
+				- Profile: Object
+					- Student: Object
+						- forename: String
+						- surename: String
+						- email: String
+					- Progression: Object
+						- completedWeeks: String[]
+						- completedTests: String[]
+						
+	/lecture/overview - GET - get the lectures divided into weeks
+		Req:
+			null
+		Resp:
+			Body:
+				Weeks: Object[]
+					- weekTitle: String
+					- lectures: Object[]
+						- id: int
+						- title: Sting
+				
+	/lecture/nextAssignment - GET - get next assignments based on user progression
+		Req:
+			Body:
+				- email
+				- weeklyLectureId
+		Resp:
+			Body:
+				- assignment: Object
+					- serialNumber
+					- title: String
+					- picture: String
+					- solution: Object[]
+						-title: String
+						-picture: String
+						
+	/lecture/previousAssignment - GET - get previous assignments based on user progression
+		Req:
+			Body:
+				- email
+				- weeklyLectureId
+		Resp:
+			Body:
+				- assignment: Object
+					- serialNumber
+					- title: String
+					- picture: String
+					- solution: Object[]
+						-title: String
+						-picture: String
+						
+	/test - GET - get test assigments
+		Req:
+			Header:
+				- testType: String - enum: (FIRST,LAST,ALL)
+		Resp:
+			Body:
+				- testAssingments: int[]
+				
+	/test/assignment - GET - get test assignment based on assingnment id
+		Req: 
+			Header:
+				- assingnmentId: int
+		Resp: 
+			- testAssignment: Object
+					- title: String
+					- picture: String
+					- solution: Object[]
+						-title: String
+						-picture: String
