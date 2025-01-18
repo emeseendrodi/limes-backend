@@ -11,9 +11,9 @@ import com.limes.backend.persistence.entity.Student;
  * @author Mate Forster
  */
 public class StudentModel extends Student{
-    
-    public StudentModel(int id, String email, String forename, String surename, String pwd_hash) {
-        super(id, email, forename, surename, pwd_hash);
+
+    public StudentModel(String email, String forename, String surename, String password) {
+        super(email, forename, surename, password);
     }
     
 }

@@ -6,6 +6,7 @@ package com.limes.backend.persistence.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  *
@@ -19,13 +20,21 @@ public class Student {
     private String email;
     private String forename;
     private String surename;
-    private String pwd_hash;
+    private String password;
 
-    public Student(int id, String email, String forename, String surename, String pwd_hash) {
+    public Student(String email, String forename, String surename, String pwd_hash) {
         this.email = email;
         this.forename = forename;
         this.surename = surename;
-        this.pwd_hash = pwd_hash;
+        this.password = pwd_hash;
+    }
+
+    public Student(int id, String email, String forename, String surename, String pwd_hash) {
+        this.id = id;
+        this.email = email;
+        this.forename = forename;
+        this.surename = surename;
+        this.password = pwd_hash;
     }
 
     public int getId() {
@@ -60,11 +69,11 @@ public class Student {
         this.surename = surename;
     }
 
-    public String getPwd_hash() {
-        return pwd_hash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPwd_hash(String pwd_hash) {
-        this.pwd_hash = pwd_hash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

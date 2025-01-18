@@ -2,10 +2,11 @@ Regisztráció:
 	/student/register - POST: register a new student
 		Req:
 			Body:
-				-email: String
-				-pwd: String
-				-surename: String
-				-forename: String
+				- studnet: Object
+					-email: String
+					-pwd: String
+					-surename: String
+					-forename: String
 		Resp:
 			Body:
 				-success: boolean
@@ -33,8 +34,12 @@ Regisztráció:
 						- surename: String
 						- email: String
 					- Progression: Object
-						- completedWeeks: String[]
-						- completedTests: String[]
+						- completedWeeks: Object[]
+							- weekTitle: String
+							- isCompleted: boolean
+						- completedTests: Object[]
+							- testTitle: String
+							- isCompleted: boolean
 						
 	/lecture/overview - GET - get the lectures divided into weeks
 		Req:

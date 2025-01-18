@@ -28,10 +28,10 @@ public class DatabaseFactory {
         if (emf == null) {
             PersistenceProvider provider = new HibernatePersistenceProvider();
             Map prop = new HashMap();
-            prop.put("javax.persistence.jdbc.url", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.url"));
-            prop.put("javax.persistence.jdbc.user", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.user"));
-            prop.put("javax.persistence.jdbc.driver", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.driver"));
-            prop.put("javax.persistence.jdbc.password", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.password"));
+            prop.put("jakarta.persistence.jdbc.url", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.url"));
+            prop.put("jakarta.persistence.jdbc.user", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.user"));
+            prop.put("jakarta.persistence.jdbc.driver", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.driver"));
+            prop.put("jakarta.persistence.jdbc.password", LimesBackendApplication.getPersistenceProperties().get("javax.persistence.jdbc.password"));
 
             try {
                 emf = provider.createEntityManagerFactory("com.limes_LimesBackend_jar_0.0.1-SNAPSHOTPU", prop);
