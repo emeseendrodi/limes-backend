@@ -6,7 +6,6 @@ package com.limes.backend.persistence.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 
 /**
  *

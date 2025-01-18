@@ -43,31 +43,46 @@ Regisztráció:
 						
 	/lecture/overview - GET - get the lectures divided into weeks
 		Req:
-			null
+			Header:
+				-email: String
 		Resp:
 			Body:
 				Weeks: Object[]
 					- weekTitle: String
-					- lectures: Object[]
-						- id: int
-						- title: Sting
+					- weeklyLecture: Object[]
+						- weeklyLectureId: int
+						- weeklyLectureTitle: Sting
+						- isCompleted
 				
 	/lecture/nextAssignment - GET - get next assignments based on user progression
 		Req:
 			Body:
 				- email
 				- weeklyLectureId
+				- isWeelkyLectureAllreadyCompleted
 		Resp:
 			Body:
 				- assignment: Object
-					- serialNumber
+					- serialNumber: String
+					- assignmentId: int
 					- title: String
 					- picture: String
 					- solution: Object[]
 						-title: String
 						-picture: String
 						
-	/lecture/previousAssignment - GET - get previous assignments based on user progression
+	/lecture/solveAssignment - POST - solve assignment
+		Req: 
+			Body:
+				- email: String
+				- assignmentId: String
+		
+		Resp:
+			Body:
+				-success: boolean
+				-errorMessage: String
+						
+	/lecture/previousAssignment - GET - get previous assignments based on user progression ITT TÖRÖLNI KELL AZ UTOLSÓ SOLVE_OT
 		Req:
 			Body:
 				- email
@@ -75,13 +90,24 @@ Regisztráció:
 		Resp:
 			Body:
 				- assignment: Object
-					- serialNumber
+					- serialNumber: String
+					- assignmentId: int
 					- title: String
 					- picture: String
 					- solution: Object[]
 						-title: String
 						-picture: String
 						
+	/test/overview - GET - get test overview
+		Req:
+			Header:
+				-email: String
+		Resp:
+			Body:
+				-test: Object[]
+					- testTitle
+					- testIsCompleted
+	
 	/test - GET - get test assigments
 		Req:
 			Header:

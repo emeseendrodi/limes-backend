@@ -10,9 +10,9 @@ import com.limes.backend.persistence.entity.Student;
  *
  * @author Mate Forster
  */
-public class StudentModel extends Student{
+public class RegisterModel extends Student{
 
-    public StudentModel(String email, String forename, String surename, String password) {
+    public RegisterModel(String email, String forename, String surename, String password) {
         super(email, forename, surename, password);
     }
     
