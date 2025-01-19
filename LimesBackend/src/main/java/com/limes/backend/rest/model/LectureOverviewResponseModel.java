@@ -10,16 +10,16 @@ import java.util.List;
  *
  * @author Mate Forster
  */
-public class LectureOverviewModel {
+public class LectureOverviewResponseModel {
     private String weekTitle;
     private List<LectureModel> weekylLecture;
 
-    public LectureOverviewModel(String weekTitle, List<LectureModel> weekylLecture) {
+    public LectureOverviewResponseModel(String weekTitle, List<LectureModel> weekylLecture) {
         this.weekTitle = weekTitle;
         this.weekylLecture = weekylLecture;
     }
 
-    public LectureOverviewModel() {
+    public LectureOverviewResponseModel() {
     }
     
 

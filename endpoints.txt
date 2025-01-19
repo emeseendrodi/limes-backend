@@ -60,10 +60,10 @@ Regisztráció:
 				- email
 				- weeklyLectureId
 				- isWeelkyLectureAllreadyCompleted
+				- assignmentId
 		Resp:
 			Body:
 				- assignment: Object
-					- serialNumber: String
 					- assignmentId: int
 					- title: String
 					- picture: String
@@ -79,8 +79,9 @@ Regisztráció:
 		
 		Resp:
 			Body:
-				-success: boolean
-				-errorMessage: String
+				- success: boolean
+				- hasNextAssignmentInLecture: boolean
+				- errorMessage: String
 						
 	/lecture/previousAssignment - GET - get previous assignments based on user progression ITT TÖRÖLNI KELL AZ UTOLSÓ SOLVE_OT
 		Req:
@@ -90,7 +91,6 @@ Regisztráció:
 		Resp:
 			Body:
 				- assignment: Object
-					- serialNumber: String
 					- assignmentId: int
 					- title: String
 					- picture: String

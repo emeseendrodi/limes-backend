@@ -8,16 +8,16 @@ package com.limes.backend.rest.model;
  *
  * @author Mate Forster
  */
-public class LoginModel {
+public class LoginRequestModel {
     private String email;
     private String password;
 
-    public LoginModel(String email, String password) {
+    public LoginRequestModel(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public LoginModel() {
+    public LoginRequestModel() {
     }
     
     public String getEmail() {

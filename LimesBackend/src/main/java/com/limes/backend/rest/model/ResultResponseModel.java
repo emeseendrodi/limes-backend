@@ -8,16 +8,16 @@ package com.limes.backend.rest.model;
  *
  * @author Mate Forster
  */
-public class ResultModel {
+public class ResultResponseModel {
     private boolean success;
     private String errorMessage;
 
-    public ResultModel(boolean success, String errorMessage) {
+    public ResultResponseModel(boolean success, String errorMessage) {
         this.success = success;
         this.errorMessage = errorMessage;
     }
 
-    public ResultModel(boolean success) {
+    public ResultResponseModel(boolean success) {
         this.success = success;
     }
 

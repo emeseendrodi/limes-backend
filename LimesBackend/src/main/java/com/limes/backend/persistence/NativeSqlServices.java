@@ -17,25 +17,33 @@ public class NativeSqlServices {
 
     @PersistenceContext
     static EntityManager em;
-    
+
     static {
-         em = DatabaseFactory.getEntityManager();
+        em = DatabaseFactory.getEntityManager();
     }
 
     public static List<?> executeNativeQueryWithClassEnforce(String sql, Class c) {
         return em.createNativeQuery(sql, c).getResultList();
     }
-    
+
     public static Object executeNativeQueryWithClassEnforceOneLiner(String sql, Class c) {
-        return em.createNativeQuery(sql, c).getResultList().get(0);
+        List result = em.createNativeQuery(sql, c).getResultList();
+        if (result == null || result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
     }
-    
-     public static List<?> executeNativeQuery(String sql) {
+
+    public static List<?> executeNativeQuery(String sql) {
         return em.createNativeQuery(sql).getResultList();
     }
-     
-      public static Object executeNativeQueryOneLiner(String sql) {
-        return em.createNativeQuery(sql).getResultList().get(0);
+
+    public static Object executeNativeQueryOneLiner(String sql) {
+        List result = em.createNativeQuery(sql).getResultList();
+        if (result == null || result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
     }
 
     public static int insertNative(String sql) throws LimesPersistenceException {
