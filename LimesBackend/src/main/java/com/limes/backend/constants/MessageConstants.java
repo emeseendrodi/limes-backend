@@ -17,4 +17,5 @@ public class MessageConstants {
     public static final String MESAGE_UNEXPECTED_ERROR_DURING_LOGIN = "Váratlan hiba a belépési folyamat során!";
     public static final String LOG_NO_USER = "Login failed for user: %s. User is not registered.";
     public static final String MESSAGE_USER_IS_NOT_REGISTERED = "Hiba! Nem létezik ilyen e-mail címmel regisztrált tanuló!";
+    public static final String LOG_LOG_INSERT_ERROR = "Couldnt insert solve data!";
 }

@@ -112,10 +112,19 @@ public class LectureController {
             int inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_INTO_PLOG_ASSIGNMENT_SOLVED, req.getEmail(), req.getAssignmentId()));
             if (inserts > 0) {
                 boolean hasMoreAssignments = (boolean) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_EXISTS_MORE_ASSIGNMENT_IN_WEEKLY_LECTURE_BY_ASSIGNMENT_ID, req.getAssignmentId(), req.getAssignmentId()), boolean.class);
-                //TODO: ITT MÉG KELL EGY WEEKLY LECTURE SOLVED ESEMÉNYT BESZÚRNI!!!
-                return new SolveAssignmentResponseModel(true, "", hasMoreAssignments);
+
+                if (!hasMoreAssignments) {
+                    inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_WEEKLY_LECTURE_COMPLETED_BY_ASSIGNMENT_ID, req.getEmail(), req.getAssignmentId()));
+                }
+
+                if (inserts > 0) {
+                    return new SolveAssignmentResponseModel(true, "", hasMoreAssignments);
+                } else {
+                    throw new LimesPersistenceException(MessageConstants.LOG_LOG_INSERT_ERROR);
+                }
+
             } else {
-                throw new LimesPersistenceException("Couldnt insert solve data!");
+                throw new LimesPersistenceException(MessageConstants.LOG_LOG_INSERT_ERROR);
             }
         } catch (LimesPersistenceException ex) {
             logger.error(ex);
