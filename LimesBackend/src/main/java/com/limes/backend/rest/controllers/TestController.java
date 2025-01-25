@@ -12,7 +12,6 @@ import com.limes.backend.exception.persistence.LimesPersistenceException;
 import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.persistence.entity.Assignment;
 import com.limes.backend.persistence.entity.Solution;
-import static com.limes.backend.rest.controllers.LectureController.logger;
 import com.limes.backend.rest.model.ResultResponseModel;
 import com.limes.backend.rest.model.TestOverviewResponseModel;
 import com.limes.backend.rest.model.TestSolveRequestModel;
@@ -20,8 +19,6 @@ import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +36,7 @@ public class TestController {
     protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     @GetMapping("/test/overview")
-    public static List<TestOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) String email) {
+    public List<TestOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) String email) {
         List<String> tests = (List<String>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_COMPLETED_TEST_BY_STUDENT, email), String.class);
 
         List<TestOverviewResponseModel> tor = new ArrayList<>();
@@ -51,7 +48,7 @@ public class TestController {
     }
 
     @GetMapping("/test")
-    public static List<Integer> getTestAssignments(@RequestParam(name = "testType", required = true) String testType) {
+    public List<Integer> getTestAssignments(@RequestParam(name = "testType", required = true) String testType) {
         if (testType.equals(TestTypeEnum.FIRST.label)) {
             return (List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_FIRST_TEST, Integer.class);
         } else if (testType.equals(TestTypeEnum.SECOND.label)) {
@@ -63,7 +60,7 @@ public class TestController {
     }
 
     @GetMapping("/test/assignment")
-    public static AssignmentResponseModel getTestAddignmentById(@RequestParam(name = "assignmentId", required = true) int assignmentId) {
+    public AssignmentResponseModel getTestAddignmentById(@RequestParam(name = "assignmentId", required = true) int assignmentId) {
         Assignment ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_ASSIGNMENT_BY_ID, assignmentId), Assignment.class);
         List<Solution> solutions = (List<Solution>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_SOLUTIONS_BY_ASSIGNMENT_ID, ass.getSolution_id()), Solution.class);
 
@@ -81,7 +78,7 @@ public class TestController {
     }
 
     @PostMapping("/test/solve")
-    public static ResultResponseModel solveTest(@RequestBody TestSolveRequestModel req) {
+    public ResultResponseModel solveTest(@RequestBody TestSolveRequestModel req) {
 
         String te = null;
 
@@ -94,7 +91,7 @@ public class TestController {
         }
 
         if (te == null) {
-            return new ResultResponseModel(false, "Hibás teszt típus!");
+            return new ResultResponseModel(false, MessageConstants.MESSAGE_FAULTY_TEST_TYPE);
         }
 
         try {

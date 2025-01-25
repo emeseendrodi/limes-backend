@@ -21,6 +21,9 @@ public class Student {
     private String surename;
     private String password;
 
+    public Student() {
+    }
+    
     public Student(String email, String forename, String surename, String pwd_hash) {
         this.email = email;
         this.forename = forename;
