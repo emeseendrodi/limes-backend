@@ -8,7 +8,11 @@ import com.limes.backend.constants.CommonConstants;
 import com.limes.backend.constants.SQLScripts;
 import com.limes.backend.enums.TestTypeEnum;
 import com.limes.backend.persistence.NativeSqlServices;
+import com.limes.backend.persistence.entity.Assignment;
+import com.limes.backend.persistence.entity.Solution;
 import com.limes.backend.rest.model.TestOverviewResponseModel;
+import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
+import com.limes.backend.rest.model.assignment.SolutionModel;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -47,5 +51,23 @@ public class TestController {
             return (List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_LAST_TEST, Integer.class);
         }
         return null;
+    }
+
+    @GetMapping("/test/assignment")
+    public static AssignmentResponseModel getTestAddignmentById(@RequestParam(name = "assignmentId", required = true) int assignmentId) {
+        Assignment ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_ASSIGNMENT_BY_ID, assignmentId), Assignment.class);
+        List<Solution> solutions = (List<Solution>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_SOLUTIONS_BY_ASSIGNMENT_ID, ass.getSolution_id()), Solution.class);
+
+        AssignmentResponseModel arm = new AssignmentResponseModel();
+        arm.setAssignmentId(ass.getId());
+        arm.setAssignmentTitle(ass.getTitle());
+        arm.setPicture(ass.getPicture());
+        List<SolutionModel> smList = new ArrayList<>();
+
+        solutions.stream().forEach(s -> {
+            smList.add(new SolutionModel(s.getPicture(), s.getTitle()));
+        });
+        arm.setSolution(smList);
+        return arm;
     }
 }
