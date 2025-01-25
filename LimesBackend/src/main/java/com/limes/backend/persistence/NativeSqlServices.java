@@ -51,7 +51,7 @@ public class NativeSqlServices {
         int rowsChanged = em.createNativeQuery(sql).executeUpdate();
         switch (rowsChanged) {
             case 0 -> {
-                em.getTransaction().commit();
+                em.getTransaction().rollback();
                 throw new LimesPersistenceException("Error during native insertion, no rows were affected!");
             }
             default -> {
@@ -59,5 +59,31 @@ public class NativeSqlServices {
                 return rowsChanged;
             }
         }
+    }
+
+    public static int deleteNative(String sql) throws LimesPersistenceException {
+        em.getTransaction().begin();
+        int rowsChanged = em.createNativeQuery(sql).executeUpdate();
+        switch (rowsChanged) {
+            case 0 -> {
+                em.getTransaction().rollback();
+                throw new LimesPersistenceException("Error during native insertion, no rows were affected!");
+            }
+            default -> {
+                em.getTransaction().commit();
+                return rowsChanged;
+            }
+        }
+    }
+
+    public static Object deleteNativeWithCustomResult(String sql, Class c) throws LimesPersistenceException {
+        em.getTransaction().begin();
+        List result = em.createNativeQuery(sql, c).getResultList();
+        if (result == null || result.isEmpty()) {
+            em.getTransaction().rollback();
+            throw new LimesPersistenceException("Error during native delete!");
+        }
+        em.getTransaction().commit();
+        return result.get(0);
     }
 }

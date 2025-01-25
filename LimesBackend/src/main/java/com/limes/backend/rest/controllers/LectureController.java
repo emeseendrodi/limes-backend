@@ -11,22 +11,18 @@ import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.persistence.entity.Assignment;
 import com.limes.backend.persistence.entity.Solution;
 import com.limes.backend.persistence.entity.WeeklyLectureOverview;
-import static com.limes.backend.rest.controllers.StudentController.logger;
-import com.limes.backend.rest.model.LectureModel;
+ import com.limes.backend.rest.model.LectureModel;
 import com.limes.backend.rest.model.LectureOverviewResponseModel;
-import com.limes.backend.rest.model.ResultResponseModel;
 import com.limes.backend.rest.model.assignment.SolveAssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
+import com.limes.backend.rest.model.assignment.PreviousAssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
 import com.limes.backend.rest.model.assignment.SolveAssignmentResponseModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -129,6 +125,32 @@ public class LectureController {
         } catch (LimesPersistenceException ex) {
             logger.error(ex);
             return new SolveAssignmentResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE, false);
+        }
+    }
+
+    @GetMapping("/lecture/previousAssignment")
+    public AssignmentResponseModel previousAssignment(@RequestBody PreviousAssignmentRequestModel req) {
+        try {
+            int assignmentId = (int) NativeSqlServices.deleteNativeWithCustomResult(String.format(SQLScripts.DELETE_LAST_ASSIGNMENT_COMPLETE_FROM_PL_LOG_RETURN_ASSIGNMENT_ID, req.getEmail()), Integer.class);
+
+            Assignment ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_ASSIGNMENT_BY_ID, assignmentId), Assignment.class);
+
+            List<Solution> solutions = (List<Solution>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_SOLUTIONS_BY_ASSIGNMENT_ID, ass.getSolution_id()), Solution.class);
+
+            AssignmentResponseModel arm = new AssignmentResponseModel();
+            arm.setAssignmentId(ass.getId());
+            arm.setAssignmentTitle(ass.getTitle());
+            arm.setPicture(ass.getPicture());
+            List<SolutionModel> smList = new ArrayList<>();
+
+            solutions.stream().forEach(s -> {
+                smList.add(new SolutionModel(s.getPicture(), s.getTitle()));
+            });
+            arm.setSolution(smList);
+            return arm;
+        } catch (LimesPersistenceException ex) {
+            logger.error(ex);
+            return null;
         }
     }
 }
