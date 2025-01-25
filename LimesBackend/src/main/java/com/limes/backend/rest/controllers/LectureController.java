@@ -11,7 +11,7 @@ import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.persistence.entity.Assignment;
 import com.limes.backend.persistence.entity.Solution;
 import com.limes.backend.persistence.entity.WeeklyLectureOverview;
- import com.limes.backend.rest.model.LectureModel;
+ import com.limes.backend.rest.model.LectureOverviewRequestModel;
 import com.limes.backend.rest.model.LectureOverviewResponseModel;
 import com.limes.backend.rest.model.assignment.SolveAssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentRequestModel;
@@ -56,7 +56,7 @@ public class LectureController {
             oneModel.setWeekylLecture(new ArrayList<>());
             for (WeeklyLectureOverview wlm : weeklyOverview) {
                 if (wlm.getWeek_id() == k) {
-                    LectureModel lm = new LectureModel();
+                    LectureOverviewRequestModel lm = new LectureOverviewRequestModel();
                     lm.setWeeklyLectureId(wlm.getWeekly_lecture_id());
                     lm.setWeeklyLectureTitle(wlm.getWeekly_lecture_title());
                     lm.setIsCompleted(wlm.isIs_completed());

@@ -111,7 +111,7 @@ Regisztráció:
 	/test - GET - get test assigments
 		Req:
 			Header:
-				- testType: String - enum: (FIRST,LAST,ALL)
+				- testType: String - enum: (FIRST,SECOND,LAST)
 		Resp:
 			Body:
 				- testAssingments: int[]

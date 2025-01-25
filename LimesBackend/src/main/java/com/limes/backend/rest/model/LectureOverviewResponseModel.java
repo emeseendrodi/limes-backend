@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class LectureOverviewResponseModel {
     private String weekTitle;
-    private List<LectureModel> weekylLecture;
+    private List<LectureOverviewRequestModel> weekylLecture;
 
-    public LectureOverviewResponseModel(String weekTitle, List<LectureModel> weekylLecture) {
+    public LectureOverviewResponseModel(String weekTitle, List<LectureOverviewRequestModel> weekylLecture) {
         this.weekTitle = weekTitle;
         this.weekylLecture = weekylLecture;
     }
@@ -31,11 +31,11 @@ public class LectureOverviewResponseModel {
         this.weekTitle = weekTitle;
     }
 
-    public List<LectureModel> getWeekylLecture() {
+    public List<LectureOverviewRequestModel> getWeekylLecture() {
         return weekylLecture;
     }
 
-    public void setWeekylLecture(List<LectureModel> weekylLecture) {
+    public void setWeekylLecture(List<LectureOverviewRequestModel> weekylLecture) {
         this.weekylLecture = weekylLecture;
     }
     

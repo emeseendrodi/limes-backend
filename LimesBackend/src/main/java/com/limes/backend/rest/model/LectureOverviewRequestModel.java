@@ -8,19 +8,19 @@ package com.limes.backend.rest.model;
  *
  * @author Mate Forster
  */
-public class LectureModel {
+public class LectureOverviewRequestModel {
 
     private int weeklyLectureId;
     private String weeklyLectureTitle;
     private boolean isCompleted;
 
-    public LectureModel(int weeklyLectureId, String weeklyLectureTitle, boolean isCompleted) {
+    public LectureOverviewRequestModel(int weeklyLectureId, String weeklyLectureTitle, boolean isCompleted) {
         this.weeklyLectureId = weeklyLectureId;
         this.weeklyLectureTitle = weeklyLectureTitle;
         this.isCompleted = isCompleted;
     }
 
-    public LectureModel() {
+    public LectureOverviewRequestModel() {
     }
 
     public int getWeeklyLectureId() {
