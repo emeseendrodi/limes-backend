@@ -127,3 +127,13 @@ Regisztráció:
 					- solution: Object[]
 						-title: String
 						-picture: String
+						
+	/test/solve - POST - solve test
+		Req:
+			Body: 
+				- email: String
+				- testType: String - enum: (FIRST,SECOND,LAST)
+		Resp:
+			Body:
+				- success: boolean
+				- errorMessage: String

@@ -5,18 +5,27 @@
 package com.limes.backend.rest.controllers;
 
 import com.limes.backend.constants.CommonConstants;
+import com.limes.backend.constants.MessageConstants;
 import com.limes.backend.constants.SQLScripts;
 import com.limes.backend.enums.TestTypeEnum;
+import com.limes.backend.exception.persistence.LimesPersistenceException;
 import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.persistence.entity.Assignment;
 import com.limes.backend.persistence.entity.Solution;
+import static com.limes.backend.rest.controllers.LectureController.logger;
+import com.limes.backend.rest.model.ResultResponseModel;
 import com.limes.backend.rest.model.TestOverviewResponseModel;
+import com.limes.backend.rest.model.TestSolveRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,5 +78,36 @@ public class TestController {
         });
         arm.setSolution(smList);
         return arm;
+    }
+
+    @PostMapping("/test/solve")
+    public static ResultResponseModel solveTest(@RequestBody TestSolveRequestModel req) {
+
+        String te = null;
+
+        if (req.getTestType().equals(TestTypeEnum.FIRST.label)) {
+            te = CommonConstants.FIRST_TEST_EVENT;
+        } else if (req.getTestType().equals(TestTypeEnum.SECOND.label)) {
+            te = CommonConstants.SECOND_TEST_EVENT;
+        } else if (req.getTestType().equals(TestTypeEnum.LAST.label)) {
+            te = CommonConstants.LAST_TEST_EVENT;
+        }
+
+        if (te == null) {
+            return new ResultResponseModel(false, "Hibás teszt típus!");
+        }
+
+        try {
+            int inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_TEST_SOLVED, req.getEmail(), te));
+
+            if (inserts > 0) {
+                return new ResultResponseModel(true);
+            } else {
+                return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST);
+            }
+        } catch (LimesPersistenceException ex) {
+            logger.error(ex);
+            return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST);
+        }
     }
 }

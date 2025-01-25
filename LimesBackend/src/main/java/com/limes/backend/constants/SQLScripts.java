@@ -26,4 +26,5 @@ public class SQLScripts {
     public final static String GET_TEST_ASSIGNMENTS_FOR_FIRST_TEST = "select a.id from assignment a where a.is_test_assignment = true and a.weekly_lecture_id in (select wl.id from weekly_lecture wl where wl.week_id <= 6)";
     public final static String GET_TEST_ASSIGNMENTS_FOR_SECOND_TEST = "select a.id from assignment a where a.is_test_assignment = true and a.weekly_lecture_id in (select wl.id from weekly_lecture wl where wl.week_id <= 12 and wl.week_id > 6)";
     public final static String GET_TEST_ASSIGNMENTS_FOR_LAST_TEST = "select a.id from assignment a where a.is_test_assignment = true and a.weekly_lecture_id in (select wl.id from weekly_lecture wl where wl.week_id <= 12)";
+    public final static String INSERT_TEST_SOLVED = "insert into progression_log (student_id,progression_tpye_id) values((select s.id from student s where s.email = '%s'),(select pt.id from progression_type pt where pt.name = '%s'))";
 }
