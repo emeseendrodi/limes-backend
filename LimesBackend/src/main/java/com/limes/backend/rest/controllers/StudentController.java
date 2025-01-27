@@ -60,7 +60,7 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/student/login")
+    @PostMapping("/student/login")
     public ResultResponseModel loginStudent(@RequestBody LoginRequestModel loginData) {
         String pwdHash = (String) NativeSqlServices.executeNativeQueryOneLiner(String.format(String.format(SQLScripts.GET_USER_PWD_HASH, loginData.getEmail())));
         if (!pwdHash.isBlank()) {
