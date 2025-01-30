@@ -4,37 +4,18 @@
  */
 package com.limes.backend.rest.model.assignment;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  *
  * @author Mate Forster
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class AbstractPictureModel {
     private String picture;
     private String title;
-
-    public AbstractPictureModel() {
-    }
-
-    public AbstractPictureModel(String picture, String title) {
-        this.picture = picture;
-        this.title = title;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
-    
 }

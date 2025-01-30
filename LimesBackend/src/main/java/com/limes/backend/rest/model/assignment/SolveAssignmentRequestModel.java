@@ -4,35 +4,21 @@
  */
 package com.limes.backend.rest.model.assignment;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  *
  * @author Mate Forster
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SolveAssignmentRequestModel {
+
     private String email;
     private int assignmentId;
-
-    public SolveAssignmentRequestModel() {
-    }
-
-    public SolveAssignmentRequestModel(String email, int assignmentId) {
-        this.email = email;
-        this.assignmentId = assignmentId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getAssignmentId() {
-        return assignmentId;
-    }
-
-    public void setAssignmentId(int assignmentId) {
-        this.assignmentId = assignmentId;
-    }
 }

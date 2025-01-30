@@ -11,17 +11,17 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.spi.PersistenceProvider;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
 /**
  *
  * @author Mate Forster
  */
+@Slf4j
 public class DatabaseFactory {
 
     private static EntityManagerFactory emf;
-    protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     public static EntityManager getEntityManager() {
 
@@ -35,10 +35,10 @@ public class DatabaseFactory {
 
             try {
                 emf = provider.createEntityManagerFactory("com.limes_LimesBackend_jar_0.0.1-SNAPSHOTPU", prop);
-                logger.info("Persistence properties has been read, EM set up.");
+                log.info("Persistence properties has been read, EM set up.");
             } catch (Exception e) {
                 emf = Persistence.createEntityManagerFactory("com.limes_LimesBackend_jar_0.0.1-SNAPSHOTPU");
-                logger.warn("Failed to initialize hibernate with properties file, going with basic settings!");
+                log.warn("Failed to initialize hibernate with properties file, going with basic settings!");
             }
         }
         return emf.createEntityManager();

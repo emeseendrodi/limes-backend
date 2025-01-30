@@ -11,15 +11,15 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author Mate Forster
  */
+@Slf4j
 public class PasswordHelper {
 
-    protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
     private final static byte[] SALT = "P3ret&ty1S$cureHWsh1".getBytes();
     private final static String ALGORITHM = "PBKDF2WithHmacSHA1";
 
@@ -30,7 +30,7 @@ public class PasswordHelper {
             return DatatypeConverter.printHexBinary(factory.generateSecret(spec).getEncoded());
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            logger.error(ex);
+            log.error(ex.getLocalizedMessage());
             throw new LimesPasswordHelperException("KeySpecFactory configuration error!");
         }
     }

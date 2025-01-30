@@ -5,36 +5,22 @@
 package com.limes.backend.rest.model.profile;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author Mate Forster
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProgressionModel {
+
     private List<ProgressionObjectModel> completedWeeks;
     private List<ProgressionObjectModel> completedTests;
 
-    public ProgressionModel() {
-    }
-
-    public ProgressionModel(List<ProgressionObjectModel> completedWeeks, List<ProgressionObjectModel> completedTests) {
-        this.completedWeeks = completedWeeks;
-        this.completedTests = completedTests;
-    }
-
-    public List<ProgressionObjectModel> getCompletedWeeks() {
-        return completedWeeks;
-    }
-
-    public void setCompletedWeeks(List<ProgressionObjectModel> completedWeeks) {
-        this.completedWeeks = completedWeeks;
-    }
-
-    public List<ProgressionObjectModel> getCompletedTests() {
-        return completedTests;
-    }
-
-    public void setCompletedTests(List<ProgressionObjectModel> completedTests) {
-        this.completedTests = completedTests;
-    }
 }

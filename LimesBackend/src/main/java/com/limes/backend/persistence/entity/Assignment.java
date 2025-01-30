@@ -6,59 +6,25 @@ package com.limes.backend.persistence.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author Mate Forster
  */
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Assignment {
     @Id
     public int id;
     private String title;
     private String picture;
     private int solution_id;
-
-    public Assignment() {
-    }
-
-    public Assignment(int id, String title, String picture, int solution_id) {
-        this.id = id;
-        this.title = title;
-        this.picture = picture;
-        this.solution_id = solution_id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public int getSolution_id() {
-        return solution_id;
-    }
-
-    public void setSolution_id(int solution_id) {
-        this.solution_id = solution_id;
-    }
 
 }

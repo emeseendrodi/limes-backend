@@ -7,14 +7,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@Slf4j
 @SpringBootApplication
 public class LimesBackendApplication {
 
-    protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
     private static Properties persistenceProperties;
 
     public static void main(String[] args) {
@@ -26,18 +26,18 @@ public class LimesBackendApplication {
     private static void readPersistenceProperties() {
         BufferedInputStream in = null;
         try {
-            in = new BufferedInputStream(new FileInputStream(new File(System.getProperty("user.dir")+"\\persistence.properties")));
+            in = new BufferedInputStream(new FileInputStream(new File(System.getProperty("user.dir") + "\\persistence.properties")));
             persistenceProperties = new Properties();
             persistenceProperties.load(in);
         } catch (FileNotFoundException ex) {
-            logger.error(ex);
+            log.error(ex.getLocalizedMessage());
         } catch (IOException ex) {
-            logger.error(ex);
+            log.error(ex.getLocalizedMessage());
         } finally {
             try {
                 in.close();
             } catch (IOException ex) {
-                logger.error(ex);
+                log.error(ex.getLocalizedMessage());
             }
         }
     }

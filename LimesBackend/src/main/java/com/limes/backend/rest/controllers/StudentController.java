@@ -23,7 +23,7 @@ import com.limes.backend.rest.model.profile.ProgressionObjectModel;
 import com.limes.backend.security.PasswordHelper;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,16 +34,15 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Mate Forster
  */
+@Slf4j
 @RestController
 public class StudentController {
-
-    protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     @PostMapping("/student/register")
     public ResultResponseModel registerStudent(@RequestBody RegisterRequestModel newStudent) {
         boolean allreadyExists = (boolean) NativeSqlServices.executeNativeQueryOneLiner(String.format(SQLScripts.CHECK_STUDENT_ALLREADY_EXISTS, newStudent.getEmail()));
         if (allreadyExists) {
-            logger.warn(String.format(MessageConstants.LOG_USER_ALLREADY_EXISTS, newStudent.getEmail()));
+            log.warn(String.format(MessageConstants.LOG_USER_ALLREADY_EXISTS, newStudent.getEmail()));
             return new ResultResponseModel(false, MessageConstants.MESSAGE_USER_ALLREADY_EXISTS);
         } else {
             try {
@@ -54,7 +53,7 @@ public class StudentController {
                      return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_REGISTRATION);
                 }
             } catch (LimesPersistenceException | LimesPasswordHelperException ex) {
-                logger.error(ex);
+                log.error(ex.getLocalizedMessage());
                 return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_REGISTRATION);
             }
         }
@@ -72,11 +71,11 @@ public class StudentController {
                     return new ResultResponseModel(false, MessageConstants.MESSAGE_INCORRECT_PASSWORD);
                 }
             } catch (LimesPasswordHelperException ex) {
-                logger.error(ex);
+                log.error(ex.getLocalizedMessage());
                 return new ResultResponseModel(false, MessageConstants.MESAGE_UNEXPECTED_ERROR_DURING_LOGIN);
             }
         } else {
-            logger.warn(MessageConstants.LOG_NO_USER);
+            log.warn(MessageConstants.LOG_NO_USER);
             return new ResultResponseModel(false, MessageConstants.MESSAGE_USER_IS_NOT_REGISTERED);
         }
     }

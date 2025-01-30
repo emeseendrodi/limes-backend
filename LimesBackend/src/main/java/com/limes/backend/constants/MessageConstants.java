@@ -20,4 +20,6 @@ public class MessageConstants {
     public static final String LOG_NO_USER = "Login failed for user: %s. User is not registered.";
     public static final String MESSAGE_USER_IS_NOT_REGISTERED = "Hiba! Nem létezik ilyen e-mail címmel regisztrált tanuló!";
     public static final String LOG_LOG_INSERT_ERROR = "Couldnt insert solve data!";
+    public static final String LOG_ERROR_DURING_NATIVE_INSERT = "Error during native insertion, no rows were affected!";
+    public static final String LOG_ERROR_DURING_NATIVE_DELETE = "Error during native delete!";
 }

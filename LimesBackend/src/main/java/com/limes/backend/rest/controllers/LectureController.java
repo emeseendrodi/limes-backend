@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,10 +34,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Mate Forster
  */
+@Slf4j
 @RestController
 public class LectureController {
 
-    protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     @GetMapping("/lecture/overview")
     public List<LectureOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) String email) {
@@ -59,7 +59,7 @@ public class LectureController {
                     LectureOverviewRequestModel lm = new LectureOverviewRequestModel();
                     lm.setWeeklyLectureId(wlm.getWeekly_lecture_id());
                     lm.setWeeklyLectureTitle(wlm.getWeekly_lecture_title());
-                    lm.setIsCompleted(wlm.isIs_completed());
+                    lm.setCompleted(wlm.is_completed());
                     oneModel.getWeekylLecture().add(lm);
                 }
             }
@@ -72,7 +72,7 @@ public class LectureController {
     @GetMapping("/lecture/nextAssignment")
     public AssignmentResponseModel getNextAssignment(@RequestBody AssignmentRequestModel req) {
         Assignment ass = null;
-        if (!req.isIsWeelkyLectureAllreadyCompleted()) {
+        if (!req.isWeelkyLectureAllreadyCompleted()) {
             ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_NEXT_ASSIGNMENT_NORMAL, req.getWeeklyLectureId(), req.getEmail()), Assignment.class);
             if (ass == null || ass.getTitle().isBlank()) {
                 ass = getFirstAssignmentForWeeklyLecture(req.getWeeklyLectureId());
@@ -123,7 +123,7 @@ public class LectureController {
                 throw new LimesPersistenceException(MessageConstants.LOG_LOG_INSERT_ERROR);
             }
         } catch (LimesPersistenceException ex) {
-            logger.error(ex);
+            log.error(ex.getLocalizedMessage());
             return new SolveAssignmentResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE, false);
         }
     }
@@ -149,7 +149,7 @@ public class LectureController {
             arm.setSolution(smList);
             return arm;
         } catch (LimesPersistenceException ex) {
-            logger.error(ex);
+            log.error(ex.getLocalizedMessage());
             return null;
         }
     }

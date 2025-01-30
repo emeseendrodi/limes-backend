@@ -19,7 +19,7 @@ import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Mate Forster
  */
+@Slf4j
 @RestController
 public class TestController {
 
-    protected static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     @GetMapping("/test/overview")
     public List<TestOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) String email) {
@@ -103,7 +103,7 @@ public class TestController {
                 return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST);
             }
         } catch (LimesPersistenceException ex) {
-            logger.error(ex);
+            log.error(ex.getLocalizedMessage());
             return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST);
         }
     }

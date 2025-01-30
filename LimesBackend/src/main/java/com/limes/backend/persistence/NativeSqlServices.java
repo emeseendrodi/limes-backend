@@ -4,6 +4,7 @@
  */
 package com.limes.backend.persistence;
 
+import com.limes.backend.constants.MessageConstants;
 import com.limes.backend.exception.persistence.LimesPersistenceException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -52,7 +53,7 @@ public class NativeSqlServices {
         switch (rowsChanged) {
             case 0 -> {
                 em.getTransaction().rollback();
-                throw new LimesPersistenceException("Error during native insertion, no rows were affected!");
+                throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_INSERT);
             }
             default -> {
                 em.getTransaction().commit();
@@ -67,7 +68,7 @@ public class NativeSqlServices {
         switch (rowsChanged) {
             case 0 -> {
                 em.getTransaction().rollback();
-                throw new LimesPersistenceException("Error during native insertion, no rows were affected!");
+                throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_INSERT);
             }
             default -> {
                 em.getTransaction().commit();
@@ -81,7 +82,7 @@ public class NativeSqlServices {
         List result = em.createNativeQuery(sql, c).getResultList();
         if (result == null || result.isEmpty()) {
             em.getTransaction().rollback();
-            throw new LimesPersistenceException("Error during native delete!");
+            throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_DELETE);
         }
         em.getTransaction().commit();
         return result.get(0);

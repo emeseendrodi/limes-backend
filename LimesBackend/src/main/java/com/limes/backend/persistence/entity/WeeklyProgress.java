@@ -6,50 +6,25 @@ package com.limes.backend.persistence.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author Mate Forster
  */
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+
 public class WeeklyProgress {
+
     @Id
     private int id;
     private int week_id;
     private boolean exists;
-
-    public WeeklyProgress() {
-    }
-
-    public WeeklyProgress(int id, int week_id, boolean exists) {
-        this.id = id;
-        this.week_id = week_id;
-        this.exists = exists;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getWeek_id() {
-        return week_id;
-    }
-
-    public void setWeek_id(int week_id) {
-        this.week_id = week_id;
-    }
-
-    public boolean isExists() {
-        return exists;
-    }
-
-    public void setExists(boolean exists) {
-        this.exists = exists;
-    }
-    
-    
 }

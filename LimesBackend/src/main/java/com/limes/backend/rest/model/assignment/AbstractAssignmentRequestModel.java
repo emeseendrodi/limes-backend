@@ -4,36 +4,18 @@
  */
 package com.limes.backend.rest.model.assignment;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  *
  * @author Mate Forster
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class AbstractAssignmentRequestModel {
     private String email;
-    private int weeklyLectureId;
-
-    public AbstractAssignmentRequestModel() {
-    }
-
-    public AbstractAssignmentRequestModel(String email, int weeklyLectureId) {
-        this.email = email;
-        this.weeklyLectureId = weeklyLectureId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getWeeklyLectureId() {
-        return weeklyLectureId;
-    }
-
-    public void setWeeklyLectureId(int weeklyLectureId) {
-        this.weeklyLectureId = weeklyLectureId;
-    }
-    
+    private int weeklyLectureId;   
 }
