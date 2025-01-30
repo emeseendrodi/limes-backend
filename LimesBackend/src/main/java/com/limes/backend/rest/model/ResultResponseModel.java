@@ -21,4 +21,8 @@ public class ResultResponseModel {
 
     private boolean success;
     private String errorMessage;
+
+    public ResultResponseModel(boolean success) {
+        this.success = success;
+    } 
 }
