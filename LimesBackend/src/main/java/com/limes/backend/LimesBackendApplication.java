@@ -1,5 +1,6 @@
 package com.limes.backend;
 
+import com.limes.backend.persistence.DatabaseFactory;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +20,7 @@ public class LimesBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(LimesBackendApplication.class, args);
         readPersistenceProperties();
+        DatabaseFactory.init();
     }
 
     private static void readPersistenceProperties() {

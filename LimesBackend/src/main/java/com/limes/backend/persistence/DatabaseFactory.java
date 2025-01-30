@@ -43,4 +43,8 @@ public class DatabaseFactory {
         }
         return emf.createEntityManager();
     }
+    
+    public static boolean init(){
+       return getEntityManager() != null;
+    }
 }
