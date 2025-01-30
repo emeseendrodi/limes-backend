@@ -4,6 +4,7 @@
  */
 package com.limes.backend.rest.model;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TestSolveRequestModel {
 
+    @NotBlank
     private String email;
+    @NotBlank
     private String testType;
 }

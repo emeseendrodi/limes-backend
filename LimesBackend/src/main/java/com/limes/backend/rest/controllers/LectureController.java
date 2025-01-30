@@ -19,6 +19,7 @@ import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
 import com.limes.backend.rest.model.assignment.PreviousAssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
 import com.limes.backend.rest.model.assignment.SolveAssignmentResponseModel;
+import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class LectureController {
 
 
     @GetMapping("/lecture/overview")
-    public List<LectureOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) String email) {
+    public List<LectureOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) @NotBlank String email) {
         List<WeeklyLectureOverview> weeklyOverview = (List<WeeklyLectureOverview>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_WEEKLY_LECTURE_OVERVIEW, email), WeeklyLectureOverview.class);
         List<LectureOverviewResponseModel> lomList = new ArrayList<>();
 
@@ -69,8 +70,9 @@ public class LectureController {
         return lomList;
     }
 
+    //TODO: INNENTŐL KELL MEGCSINÁLNI A VALIDÁCIÓT MEG A GETEKET ÁTBASZNI
     @GetMapping("/lecture/nextAssignment")
-    public AssignmentResponseModel getNextAssignment(@RequestBody AssignmentRequestModel req) {
+    public AssignmentResponseModel getNextAss ignment(@RequestBody AssignmentRequestModel req) {
         Assignment ass = null;
         if (!req.isWeelkyLectureAllreadyCompleted()) {
             ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_NEXT_ASSIGNMENT_NORMAL, req.getWeeklyLectureId(), req.getEmail()), Assignment.class);

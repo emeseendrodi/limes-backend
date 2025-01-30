@@ -17,9 +17,13 @@ import com.limes.backend.rest.model.TestOverviewResponseModel;
 import com.limes.backend.rest.model.TestSolveRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +40,7 @@ public class TestController {
 
 
     @GetMapping("/test/overview")
-    public List<TestOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) String email) {
+    public List<TestOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) @NotBlank String email) {
         List<String> tests = (List<String>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_COMPLETED_TEST_BY_STUDENT, email), String.class);
 
         List<TestOverviewResponseModel> tor = new ArrayList<>();
@@ -48,19 +52,20 @@ public class TestController {
     }
 
     @GetMapping("/test")
-    public List<Integer> getTestAssignments(@RequestParam(name = "testType", required = true) String testType) {
+    public ResponseEntity getTestAssignments(@RequestParam(name = "testType", required = true) @NotBlank String testType) {
         if (testType.equals(TestTypeEnum.FIRST.label)) {
-            return (List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_FIRST_TEST, Integer.class);
+            return new ResponseEntity((List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_FIRST_TEST, Integer.class),HttpStatus.OK);
         } else if (testType.equals(TestTypeEnum.SECOND.label)) {
-            return (List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_SECOND_TEST, Integer.class);
+            return new ResponseEntity((List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_SECOND_TEST, Integer.class),HttpStatus.OK);
         } else if (testType.equals(TestTypeEnum.LAST.label)) {
-            return (List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_LAST_TEST, Integer.class);
+            return new ResponseEntity((List<Integer>) NativeSqlServices.executeNativeQueryWithClassEnforce(SQLScripts.GET_TEST_ASSIGNMENTS_FOR_LAST_TEST, Integer.class),HttpStatus.OK);
+        }else{
+            return new ResponseEntity(new ResultResponseModel(false, MessageConstants.MESSAGE_FAULTY_TEST_TYPE),HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
 
     @GetMapping("/test/assignment")
-    public AssignmentResponseModel getTestAddignmentById(@RequestParam(name = "assignmentId", required = true) int assignmentId) {
+    public AssignmentResponseModel getTestAddignmentById(@RequestParam(name = "assignmentId", required = true) @NotBlank int assignmentId) {
         Assignment ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_ASSIGNMENT_BY_ID, assignmentId), Assignment.class);
         List<Solution> solutions = (List<Solution>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_SOLUTIONS_BY_ASSIGNMENT_ID, ass.getSolution_id()), Solution.class);
 
@@ -78,7 +83,7 @@ public class TestController {
     }
 
     @PostMapping("/test/solve")
-    public ResultResponseModel solveTest(@RequestBody TestSolveRequestModel req) {
+    public ResponseEntity solveTest(@Valid @RequestBody TestSolveRequestModel req) {
 
         String te = null;
 
@@ -91,20 +96,20 @@ public class TestController {
         }
 
         if (te == null) {
-            return new ResultResponseModel(false, MessageConstants.MESSAGE_FAULTY_TEST_TYPE);
+            return new ResponseEntity(new ResultResponseModel(false, MessageConstants.MESSAGE_FAULTY_TEST_TYPE),HttpStatus.BAD_REQUEST);
         }
 
         try {
             int inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_TEST_SOLVED, req.getEmail(), te));
 
             if (inserts > 0) {
-                return new ResultResponseModel(true);
+                return new ResponseEntity(new ResultResponseModel(true),HttpStatus.OK);
             } else {
-                return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST);
+                return new ResponseEntity(new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST),HttpStatus.UNPROCESSABLE_ENTITY);
             }
         } catch (LimesPersistenceException ex) {
             log.error(ex.getLocalizedMessage());
-            return new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST);
+            return new ResponseEntity(new ResultResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE_TEST),HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }
