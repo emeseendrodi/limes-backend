@@ -4,6 +4,8 @@
  */
 package com.limes.backend.rest.model.assignment;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class AbstractAssignmentRequestModel {
+    @NotBlank
     private String email;
+    @NotNull
     private int weeklyLectureId;   
 }

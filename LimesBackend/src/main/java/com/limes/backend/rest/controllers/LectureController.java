@@ -11,7 +11,7 @@ import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.persistence.entity.Assignment;
 import com.limes.backend.persistence.entity.Solution;
 import com.limes.backend.persistence.entity.WeeklyLectureOverview;
- import com.limes.backend.rest.model.LectureOverviewRequestModel;
+ import com.limes.backend.rest.model.LectureOverviewModel;
 import com.limes.backend.rest.model.LectureOverviewResponseModel;
 import com.limes.backend.rest.model.assignment.SolveAssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentRequestModel;
@@ -19,6 +19,7 @@ import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
 import com.limes.backend.rest.model.assignment.PreviousAssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
 import com.limes.backend.rest.model.assignment.SolveAssignmentResponseModel;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ public class LectureController {
             oneModel.setWeekylLecture(new ArrayList<>());
             for (WeeklyLectureOverview wlm : weeklyOverview) {
                 if (wlm.getWeek_id() == k) {
-                    LectureOverviewRequestModel lm = new LectureOverviewRequestModel();
+                    LectureOverviewModel lm = new LectureOverviewModel();
                     lm.setWeeklyLectureId(wlm.getWeekly_lecture_id());
                     lm.setWeeklyLectureTitle(wlm.getWeekly_lecture_title());
                     lm.setCompleted(wlm.is_completed());
@@ -70,9 +71,8 @@ public class LectureController {
         return lomList;
     }
 
-    //TODO: INNENTŐL KELL MEGCSINÁLNI A VALIDÁCIÓT MEG A GETEKET ÁTBASZNI
     @GetMapping("/lecture/nextAssignment")
-    public AssignmentResponseModel getNextAssignment(@RequestBody AssignmentRequestModel req) {
+    public AssignmentResponseModel getNextAssignment(@Valid @RequestBody AssignmentRequestModel req) {
         Assignment ass = null;
         if (!req.isWeelkyLectureAllreadyCompleted()) {
             ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_NEXT_ASSIGNMENT_NORMAL, req.getWeeklyLectureId(), req.getEmail()), Assignment.class);
@@ -105,7 +105,7 @@ public class LectureController {
     }
 
     @PostMapping("/lecture/solveAssignment")
-    public SolveAssignmentResponseModel solveAssignment(@RequestBody SolveAssignmentRequestModel req) {
+    public SolveAssignmentResponseModel solveAssignment(@Valid @RequestBody SolveAssignmentRequestModel req) {
         try {
             int inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_INTO_PLOG_ASSIGNMENT_SOLVED, req.getEmail(), req.getAssignmentId()));
             if (inserts > 0) {
@@ -131,7 +131,7 @@ public class LectureController {
     }
 
     @GetMapping("/lecture/previousAssignment")
-    public AssignmentResponseModel previousAssignment(@RequestBody PreviousAssignmentRequestModel req) {
+    public AssignmentResponseModel previousAssignment(@Valid @RequestBody PreviousAssignmentRequestModel req) {
         try {
             int assignmentId = (int) NativeSqlServices.deleteNativeWithCustomResult(String.format(SQLScripts.DELETE_LAST_ASSIGNMENT_COMPLETE_FROM_PL_LOG_RETURN_ASSIGNMENT_ID, req.getEmail()), Integer.class);
 

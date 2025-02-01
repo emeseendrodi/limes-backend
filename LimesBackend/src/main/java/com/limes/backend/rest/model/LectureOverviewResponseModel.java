@@ -21,6 +21,6 @@ import lombok.NoArgsConstructor;
 public class LectureOverviewResponseModel {
 
     private String weekTitle;
-    private List<LectureOverviewRequestModel> weekylLecture;
+    private List<LectureOverviewModel> weekylLecture;
 
 }

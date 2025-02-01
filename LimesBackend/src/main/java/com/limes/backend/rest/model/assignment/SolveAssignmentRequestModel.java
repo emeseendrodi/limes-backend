@@ -4,6 +4,8 @@
  */
 package com.limes.backend.rest.model.assignment;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +21,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SolveAssignmentRequestModel {
 
+    @NotBlank
     private String email;
+    @NotNull
     private int assignmentId;
 }

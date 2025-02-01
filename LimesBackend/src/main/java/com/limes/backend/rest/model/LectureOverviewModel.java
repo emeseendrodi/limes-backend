@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LectureOverviewRequestModel {
+public class LectureOverviewModel {
 
     private int weeklyLectureId;
     private String weeklyLectureTitle;
