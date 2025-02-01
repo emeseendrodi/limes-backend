@@ -72,7 +72,7 @@ public class LectureController {
 
     //TODO: INNENTŐL KELL MEGCSINÁLNI A VALIDÁCIÓT MEG A GETEKET ÁTBASZNI
     @GetMapping("/lecture/nextAssignment")
-    public AssignmentResponseModel getNextAss ignment(@RequestBody AssignmentRequestModel req) {
+    public AssignmentResponseModel getNextAssignment(@RequestBody AssignmentRequestModel req) {
         Assignment ass = null;
         if (!req.isWeelkyLectureAllreadyCompleted()) {
             ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_NEXT_ASSIGNMENT_NORMAL, req.getWeeklyLectureId(), req.getEmail()), Assignment.class);
