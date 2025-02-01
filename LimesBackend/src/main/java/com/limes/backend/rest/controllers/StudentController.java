@@ -20,7 +20,7 @@ import com.limes.backend.rest.model.RegisterRequestModel;
 import com.limes.backend.rest.model.profile.ProfileResponseModel;
 import com.limes.backend.rest.model.profile.ProgressionModel;
 import com.limes.backend.rest.model.profile.ProgressionObjectModel;
-import com.limes.backend.security.PasswordHelper;
+import com.limes.backend.security.pwd.PasswordHelper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
