@@ -18,6 +18,7 @@ import com.limes.backend.rest.model.TestSolveRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
 import com.limes.backend.rest.model.assignment.SolutionModel;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class TestController {
     }
 
     @GetMapping("/test/assignment")
-    public AssignmentResponseModel getTestAddignmentById(@RequestParam(name = "assignmentId", required = true) @NotNull int assignmentId) {
+    public AssignmentResponseModel getTestAddignmentById(@RequestParam(name = "assignmentId", required = true) @Min(0) int assignmentId) {
         Assignment ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_ASSIGNMENT_BY_ID, assignmentId), Assignment.class);
         List<Solution> solutions = (List<Solution>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_SOLUTIONS_BY_ASSIGNMENT_ID, ass.getSolution_id()), Solution.class);
 

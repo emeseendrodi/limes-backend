@@ -4,6 +4,7 @@
  */
 package com.limes.backend.rest.model.assignment;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,6 @@ import lombok.NoArgsConstructor;
 public class AssignmentRequestModel extends AbstractAssignmentRequestModel {
     @NotNull
     private boolean isWeelkyLectureAllreadyCompleted;
-    @NotNull
+    @Min(0)
     private int previousAssignemntId;
 }

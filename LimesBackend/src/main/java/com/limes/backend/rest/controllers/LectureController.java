@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -42,7 +41,7 @@ public class LectureController {
 
 
     @GetMapping("/lecture/overview")
-    public List<LectureOverviewResponseModel> getOverview(@RequestParam(name = "email", required = true) @NotBlank String email) {
+    public List<LectureOverviewResponseModel> getOverview( @NotBlank String email) {
         List<WeeklyLectureOverview> weeklyOverview = (List<WeeklyLectureOverview>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_WEEKLY_LECTURE_OVERVIEW, email), WeeklyLectureOverview.class);
         List<LectureOverviewResponseModel> lomList = new ArrayList<>();
 
@@ -72,7 +71,7 @@ public class LectureController {
     }
 
     @GetMapping("/lecture/nextAssignment")
-    public AssignmentResponseModel getNextAssignment(@Valid @RequestBody AssignmentRequestModel req) {
+    public AssignmentResponseModel getNextAssignment(@Valid AssignmentRequestModel req) {
         Assignment ass = null;
         if (!req.isWeelkyLectureAllreadyCompleted()) {
             ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_NEXT_ASSIGNMENT_NORMAL, req.getWeeklyLectureId(), req.getEmail()), Assignment.class);
@@ -131,7 +130,8 @@ public class LectureController {
     }
 
     @GetMapping("/lecture/previousAssignment")
-    public AssignmentResponseModel previousAssignment(@Valid @RequestBody PreviousAssignmentRequestModel req) {
+    public AssignmentResponseModel previousAssignment(@Valid PreviousAssignmentRequestModel req) {
+        System.out.println(req.getEmail()+ req.getWeeklyLectureId());
         try {
             int assignmentId = (int) NativeSqlServices.deleteNativeWithCustomResult(String.format(SQLScripts.DELETE_LAST_ASSIGNMENT_COMPLETE_FROM_PL_LOG_RETURN_ASSIGNMENT_ID, req.getEmail()), Integer.class);
 
