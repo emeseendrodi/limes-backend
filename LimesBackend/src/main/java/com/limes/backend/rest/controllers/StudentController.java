@@ -15,12 +15,14 @@ import com.limes.backend.persistence.entity.Student;
 import com.limes.backend.persistence.entity.Week;
 import com.limes.backend.persistence.entity.WeeklyProgress;
 import com.limes.backend.rest.model.LoginRequestModel;
+import com.limes.backend.rest.model.LoginResponseModel;
 import com.limes.backend.rest.model.ResultResponseModel;
 import com.limes.backend.rest.model.RegisterRequestModel;
 import com.limes.backend.rest.model.profile.ProfileResponseModel;
 import com.limes.backend.rest.model.profile.ProgressionModel;
 import com.limes.backend.rest.model.profile.ProgressionObjectModel;
 import com.limes.backend.security.pwd.PasswordHelper;
+import com.limes.backend.security.tokenization.JwtService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -68,9 +70,8 @@ public class StudentController {
         String pwdHash = (String) NativeSqlServices.executeNativeQueryOneLiner(String.format(String.format(SQLScripts.GET_USER_PWD_HASH, loginData.getEmail())));
         if (!pwdHash.isBlank()) {
             try {
-                System.out.println(pwdHash+" | "+new PasswordHelper().hashPassword(loginData.getPassword()));
                 if (pwdHash.equalsIgnoreCase(new PasswordHelper().hashPassword(loginData.getPassword()))) {
-                    return new ResponseEntity(new ResultResponseModel(true),HttpStatus.OK);
+                    return new ResponseEntity(new LoginResponseModel(JwtService.generateToken(loginData.getEmail()),JwtService.getExpirationTime(),loginData.getEmail()),HttpStatus.OK);
                 }else{
                     return new ResponseEntity(new ResultResponseModel(false, MessageConstants.MESSAGE_INCORRECT_PASSWORD),HttpStatus.OK);
                 }

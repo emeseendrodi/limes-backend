@@ -12,68 +12,70 @@ import java.util.function.Function;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
  * @author Mate Forster
  */
 public class JwtService {
-    @Value("${jwt.secret.key}")
-    private String key;
 
-    @Value("${jwt.exp.time}")
-    private long expirationTimeInMilisec;
+    private static String key = "625d4ae6115a6d57b15cf2d8f0fed4bb08c7dfe31225c12d9703ada2af1479f4";
+    private static long expirationTimeInMilisec = 3600000;
+    private static List<String> sessionTokens = new ArrayList<>();
 
-    public String extractUsername(String token) {
+    public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(Student student) {
-        return generateToken(new HashMap<>(), student);
+    public static String generateToken(String email) {
+        String token = generateToken(new HashMap<>(), email);
+        sessionTokens.add(token);
+        return token;
     }
 
-    public String generateToken(Map<String, Object> extraClaims, Student student) {
-        return buildToken(extraClaims, student, expirationTimeInMilisec);
+    public static String generateToken(Map<String, Object> extraClaims, String email) {
+        return buildToken(extraClaims, email, expirationTimeInMilisec);
     }
 
-    public long getExpirationTime() {
-        return expirationTimeInMilisec;
+    public static long getExpirationTime() {
+        return System.currentTimeMillis() + expirationTimeInMilisec;
     }
 
-    private String buildToken(Map<String, Object> extraClaims,Student student,long expiration) {
+    private static String buildToken(Map<String, Object> extraClaims, String email, long expiration) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(student.getEmail())
+                .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean isTokenValid(String token, Student student) {
+    public static boolean isTokenValid(String token, Student student) {
         final String username = extractUsername(token);
         return (username.equals(student.getEmail())) && !isTokenExpired(token);
     }
 
-    private boolean isTokenExpired(String token) {
+    private static boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
+    private static Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token) {
+    private static Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
@@ -81,7 +83,15 @@ public class JwtService {
                 .getBody();
     }
 
-    private Key getSignInKey() {
+    private static Key getSignInKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
+    }
+
+    public static void addActiveSessionToken(String token) {
+        sessionTokens.add(token);
+    }
+
+    public static boolean isTokenLive(String token) {
+        return (sessionTokens.contains(token) && !isTokenExpired(token));
     }
 }
