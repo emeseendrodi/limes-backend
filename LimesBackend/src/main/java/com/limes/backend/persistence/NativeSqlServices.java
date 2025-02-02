@@ -24,10 +24,12 @@ public class NativeSqlServices {
     }
 
     public static List<?> executeNativeQueryWithClassEnforce(String sql, Class c) {
+        resetEm();
         return em.createNativeQuery(sql, c).getResultList();
     }
 
     public static Object executeNativeQueryWithClassEnforceOneLiner(String sql, Class c) {
+        resetEm();
         List result = em.createNativeQuery(sql, c).getResultList();
         if (result == null || result.isEmpty()) {
             return null;
@@ -36,10 +38,12 @@ public class NativeSqlServices {
     }
 
     public static List<?> executeNativeQuery(String sql) {
+        resetEm();
         return em.createNativeQuery(sql).getResultList();
     }
 
     public static Object executeNativeQueryOneLiner(String sql) {
+        resetEm();
         List result = em.createNativeQuery(sql).getResultList();
         if (result == null || result.isEmpty()) {
             return null;
@@ -53,10 +57,12 @@ public class NativeSqlServices {
         switch (rowsChanged) {
             case 0 -> {
                 em.getTransaction().rollback();
+                resetEm();
                 throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_INSERT);
             }
             default -> {
                 em.getTransaction().commit();
+                resetEm();
                 return rowsChanged;
             }
         }
@@ -68,10 +74,12 @@ public class NativeSqlServices {
         switch (rowsChanged) {
             case 0 -> {
                 em.getTransaction().rollback();
+                resetEm();
                 throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_INSERT);
             }
             default -> {
                 em.getTransaction().commit();
+                resetEm();
                 return rowsChanged;
             }
         }
@@ -82,9 +90,15 @@ public class NativeSqlServices {
         List result = em.createNativeQuery(sql, c).getResultList();
         if (result == null || result.isEmpty()) {
             em.getTransaction().rollback();
+            resetEm();
             throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_DELETE);
         }
         em.getTransaction().commit();
+        resetEm();
         return result.get(0);
+    }
+
+    private static void resetEm() {
+        em.clear();
     }
 }
