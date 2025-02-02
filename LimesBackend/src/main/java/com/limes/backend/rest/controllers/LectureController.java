@@ -6,13 +6,15 @@ package com.limes.backend.rest.controllers;
 
 import com.limes.backend.constants.MessageConstants;
 import com.limes.backend.constants.SQLScripts;
+import com.limes.backend.exception.jwt.LimesInvalidJwtTokenException;
 import com.limes.backend.exception.persistence.LimesPersistenceException;
 import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.persistence.entity.Assignment;
 import com.limes.backend.persistence.entity.Solution;
 import com.limes.backend.persistence.entity.WeeklyLectureOverview;
- import com.limes.backend.rest.model.LectureOverviewModel;
+import com.limes.backend.rest.model.LectureOverviewModel;
 import com.limes.backend.rest.model.LectureOverviewResponseModel;
+import com.limes.backend.rest.model.ResultResponseModel;
 import com.limes.backend.rest.model.assignment.SolveAssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentRequestModel;
 import com.limes.backend.rest.model.assignment.AssignmentResponseModel;
@@ -26,9 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -37,11 +43,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-public class LectureController {
-
+public class LectureController extends AbstractController {
 
     @GetMapping("/lecture/overview")
-    public List<LectureOverviewResponseModel> getOverview( @NotBlank String email) {
+    public ResponseEntity getOverview(@RequestHeader(HttpHeaders.AUTHORIZATION) @NotBlank String auth) {
+        String email;
+        try {
+            email = extractEmailFromToken(auth);
+        } catch (LimesInvalidJwtTokenException ex) {
+            return new ResponseEntity(new ResultResponseModel(false, ex.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+        }
+
         List<WeeklyLectureOverview> weeklyOverview = (List<WeeklyLectureOverview>) NativeSqlServices.executeNativeQueryWithClassEnforce(String.format(SQLScripts.GET_WEEKLY_LECTURE_OVERVIEW, email), WeeklyLectureOverview.class);
         List<LectureOverviewResponseModel> lomList = new ArrayList<>();
 
@@ -67,14 +79,20 @@ public class LectureController {
             lomList.add(oneModel);
         });
 
-        return lomList;
+        return new ResponseEntity(lomList, HttpStatus.OK);
     }
 
     @GetMapping("/lecture/nextAssignment")
-    public AssignmentResponseModel getNextAssignment(@Valid AssignmentRequestModel req) {
+    public ResponseEntity getNextAssignment(@RequestHeader(HttpHeaders.AUTHORIZATION) @NotBlank String auth, @Valid AssignmentRequestModel req) {
+        String email;
+        try {
+            email = extractEmailFromToken(auth);
+        } catch (LimesInvalidJwtTokenException ex) {
+            return new ResponseEntity(new ResultResponseModel(false, ex.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+        }
         Assignment ass = null;
         if (!req.isWeelkyLectureAllreadyCompleted()) {
-            ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_NEXT_ASSIGNMENT_NORMAL, req.getWeeklyLectureId(), req.getEmail()), Assignment.class);
+            ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_NEXT_ASSIGNMENT_NORMAL, req.getWeeklyLectureId(), email), Assignment.class);
             if (ass == null || ass.getTitle().isBlank()) {
                 ass = getFirstAssignmentForWeeklyLecture(req.getWeeklyLectureId());
             }
@@ -96,7 +114,7 @@ public class LectureController {
             smList.add(new SolutionModel(s.getPicture(), s.getTitle()));
         });
         arm.setSolution(smList);
-        return arm;
+        return new ResponseEntity(arm, HttpStatus.OK);
     }
 
     private Assignment getFirstAssignmentForWeeklyLecture(int weeklyLectureId) {
@@ -104,36 +122,47 @@ public class LectureController {
     }
 
     @PostMapping("/lecture/solveAssignment")
-    public SolveAssignmentResponseModel solveAssignment(@Valid @RequestBody SolveAssignmentRequestModel req) {
+    public ResponseEntity solveAssignment(@RequestHeader(HttpHeaders.AUTHORIZATION) @NotBlank String auth, @Valid @RequestBody SolveAssignmentRequestModel req) {
+        String email;
         try {
-            int inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_INTO_PLOG_ASSIGNMENT_SOLVED, req.getEmail(), req.getAssignmentId()));
+            email = extractEmailFromToken(auth);
+        } catch (LimesInvalidJwtTokenException ex) {
+            return new ResponseEntity(new ResultResponseModel(false, ex.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            int inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_INTO_PLOG_ASSIGNMENT_SOLVED, email, req.getAssignmentId()));
             if (inserts > 0) {
                 boolean hasMoreAssignments = (boolean) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_EXISTS_MORE_ASSIGNMENT_IN_WEEKLY_LECTURE_BY_ASSIGNMENT_ID, req.getAssignmentId(), req.getAssignmentId()), boolean.class);
 
                 if (!hasMoreAssignments) {
-                    inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_WEEKLY_LECTURE_COMPLETED_BY_ASSIGNMENT_ID, req.getEmail(), req.getAssignmentId()));
+                    inserts = NativeSqlServices.insertNative(String.format(SQLScripts.INSERT_WEEKLY_LECTURE_COMPLETED_BY_ASSIGNMENT_ID, email, req.getAssignmentId()));
                 }
 
                 if (inserts > 0) {
-                    return new SolveAssignmentResponseModel(true, "", hasMoreAssignments);
+                    new ResponseEntity(new SolveAssignmentResponseModel(true, "", hasMoreAssignments), HttpStatus.OK);
                 } else {
                     throw new LimesPersistenceException(MessageConstants.LOG_LOG_INSERT_ERROR);
                 }
-
             } else {
                 throw new LimesPersistenceException(MessageConstants.LOG_LOG_INSERT_ERROR);
             }
         } catch (LimesPersistenceException ex) {
             log.error(ex.getLocalizedMessage());
-            return new SolveAssignmentResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE, false);
+            return new ResponseEntity(new SolveAssignmentResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE, false), HttpStatus.UNPROCESSABLE_ENTITY);
         }
+        return new ResponseEntity(new SolveAssignmentResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE, false), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @GetMapping("/lecture/previousAssignment")
-    public AssignmentResponseModel previousAssignment(@Valid PreviousAssignmentRequestModel req) {
-        System.out.println(req.getEmail()+ req.getWeeklyLectureId());
+    public ResponseEntity previousAssignment(@RequestHeader(HttpHeaders.AUTHORIZATION) @NotBlank String auth, @Valid PreviousAssignmentRequestModel req) {
+        String email;
         try {
-            int assignmentId = (int) NativeSqlServices.deleteNativeWithCustomResult(String.format(SQLScripts.DELETE_LAST_ASSIGNMENT_COMPLETE_FROM_PL_LOG_RETURN_ASSIGNMENT_ID, req.getEmail()), Integer.class);
+            email = extractEmailFromToken(auth);
+        } catch (LimesInvalidJwtTokenException ex) {
+            return new ResponseEntity(new ResultResponseModel(false, ex.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            int assignmentId = (int) NativeSqlServices.deleteNativeWithCustomResult(String.format(SQLScripts.DELETE_LAST_ASSIGNMENT_COMPLETE_FROM_PL_LOG_RETURN_ASSIGNMENT_ID, email), Integer.class);
 
             Assignment ass = (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_ASSIGNMENT_BY_ID, assignmentId), Assignment.class);
 
@@ -149,7 +178,7 @@ public class LectureController {
                 smList.add(new SolutionModel(s.getPicture(), s.getTitle()));
             });
             arm.setSolution(smList);
-            return arm;
+            return new ResponseEntity(arm, HttpStatus.OK);
         } catch (LimesPersistenceException ex) {
             log.error(ex.getLocalizedMessage());
             return null;

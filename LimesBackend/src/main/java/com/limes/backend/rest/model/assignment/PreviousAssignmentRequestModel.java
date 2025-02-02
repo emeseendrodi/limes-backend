@@ -14,7 +14,7 @@ public class PreviousAssignmentRequestModel extends AbstractAssignmentRequestMod
     }
 
     public PreviousAssignmentRequestModel(String email, int weeklyLectureId) {
-        super(email, weeklyLectureId);
+        super(weeklyLectureId);
     }
     
 }

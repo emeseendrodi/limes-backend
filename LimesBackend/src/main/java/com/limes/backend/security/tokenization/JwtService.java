@@ -6,16 +6,18 @@ package com.limes.backend.security.tokenization;
 
 import com.limes.backend.persistence.entity.Student;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.function.Function;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,20 +28,18 @@ public class JwtService {
 
     private static String key = "625d4ae6115a6d57b15cf2d8f0fed4bb08c7dfe31225c12d9703ada2af1479f4";
     private static long expirationTimeInMilisec = 3600000;
-    private static List<String> sessionTokens = new ArrayList<>();
 
-    public static String extractUsername(String token) {
+    public static String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) throws  ExpiredJwtException,SignatureException,UnsupportedJwtException,MalformedJwtException, IllegalArgumentException{
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     public static String generateToken(String email) {
         String token = generateToken(new HashMap<>(), email);
-        sessionTokens.add(token);
         return token;
     }
 
@@ -62,12 +62,12 @@ public class JwtService {
                 .compact();
     }
 
-    public static boolean isTokenValid(String token, Student student) {
-        final String username = extractUsername(token);
-        return (username.equals(student.getEmail())) && !isTokenExpired(token);
+    public static boolean isTokenValid(String token, Student student) throws  ExpiredJwtException,SignatureException,UnsupportedJwtException,MalformedJwtException, IllegalArgumentException{
+        final String email = extractEmail(token);
+        return (email.equals(student.getEmail())) && !isTokenExpired(token);
     }
 
-    private static boolean isTokenExpired(String token) {
+    public static boolean isTokenExpired(String token) throws  ExpiredJwtException,SignatureException,UnsupportedJwtException,MalformedJwtException, IllegalArgumentException{
         return extractExpiration(token).before(new Date());
     }
 
@@ -75,7 +75,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private static Claims extractAllClaims(String token) {
+    private static Claims extractAllClaims(String token){
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
@@ -85,13 +85,5 @@ public class JwtService {
 
     private static Key getSignInKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
-    }
-
-    public static void addActiveSessionToken(String token) {
-        sessionTokens.add(token);
-    }
-
-    public static boolean isTokenLive(String token) {
-        return (sessionTokens.contains(token) && !isTokenExpired(token));
     }
 }

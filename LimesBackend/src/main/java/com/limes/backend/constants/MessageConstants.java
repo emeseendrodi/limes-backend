@@ -22,4 +22,5 @@ public class MessageConstants {
     public static final String LOG_LOG_INSERT_ERROR = "Couldnt insert solve data!";
     public static final String LOG_ERROR_DURING_NATIVE_INSERT = "Error during native insertion, no rows were affected!";
     public static final String LOG_ERROR_DURING_NATIVE_DELETE = "Error during native delete!";
+    public static final String LOG_TOKEN_IS_VALID_BUT_EXPIRED = "The given token is valid, but its expired!";
 }

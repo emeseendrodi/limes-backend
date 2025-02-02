@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TestSolveRequestModel {
 
-    @NotBlank
-    private String email;
+//    @NotBlank
+//    private String email;
     @NotBlank
     private String testType;
 }
