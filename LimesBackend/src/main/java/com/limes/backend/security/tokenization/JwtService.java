@@ -49,11 +49,7 @@ public class JwtService {
         return expirationTimeInMilisec;
     }
 
-    private String buildToken(
-            Map<String, Object> extraClaims,
-            Student student,
-            long expiration
-    ) {
+    private String buildToken(Map<String, Object> extraClaims,Student student,long expiration) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
