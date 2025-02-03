@@ -121,7 +121,7 @@ public class LectureController extends AbstractController {
         return (Assignment) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_FIRST_ASSIGNMENT_IN_WEEKLY_LECTURE, weeklyLectureId), Assignment.class);
     }
 
-    @PostMapping("/lecture/solveAssignment")
+   @PostMapping("/lecture/solveAssignment")
     public ResponseEntity solveAssignment(@RequestHeader(HttpHeaders.AUTHORIZATION) @NotBlank String auth, @Valid @RequestBody SolveAssignmentRequestModel req) {
         String email;
         try {
@@ -139,7 +139,7 @@ public class LectureController extends AbstractController {
                 }
 
                 if (inserts > 0) {
-                    new ResponseEntity(new SolveAssignmentResponseModel(true, "", hasMoreAssignments), HttpStatus.OK);
+                    return new ResponseEntity<>(new SolveAssignmentResponseModel(true, "", hasMoreAssignments), HttpStatus.OK);
                 } else {
                     throw new LimesPersistenceException(MessageConstants.LOG_LOG_INSERT_ERROR);
                 }
@@ -150,9 +150,8 @@ public class LectureController extends AbstractController {
             log.error(ex.getLocalizedMessage());
             return new ResponseEntity(new SolveAssignmentResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE, false), HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return new ResponseEntity(new SolveAssignmentResponseModel(false, MessageConstants.MESSAGE_UNEXPECTED_ERROR_DURING_SOLVE, false), HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
+    
     @GetMapping("/lecture/previousAssignment")
     public ResponseEntity previousAssignment(@RequestHeader(HttpHeaders.AUTHORIZATION) @NotBlank String auth, @Valid PreviousAssignmentRequestModel req) {
         String email;
