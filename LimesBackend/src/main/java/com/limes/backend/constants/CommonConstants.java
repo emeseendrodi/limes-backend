@@ -14,4 +14,5 @@ public class CommonConstants {
     public final static String SECOND_TEST_EVENT = "SECOND_TEST_COMPLETED";
     public final static String LAST_TEST_EVENT = "LAST_TEST_COMPLETED";
     public final static String BEARER_CONSTANT = "Bearer ";
+    public final static String REQUEST_DATA = "REQUEST DATA: ";
 }
