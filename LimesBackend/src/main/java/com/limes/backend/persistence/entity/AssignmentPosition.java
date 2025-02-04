@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.limes.backend.rest.model.assignment;
+package com.limes.backend.persistence.entity;
 
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,15 +15,13 @@ import lombok.NoArgsConstructor;
  *
  * @author Mate Forster
  */
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AssignmentResponseModel extends AbstractPictureModel{
-    private int assignmentId;
-//    private int serialNumber;
-    private String assignmentTitle;
-    private List<SolutionModel> solution; 
-    private int totalAssignmentsInLecture;
-    private int remainingAssignmentsInLecture;
+public class AssignmentPosition {
+    @Id
+    private int total;
+    private int remaining;
 }

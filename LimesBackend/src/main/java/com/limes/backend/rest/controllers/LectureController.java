@@ -10,6 +10,7 @@ import com.limes.backend.exception.jwt.LimesInvalidJwtTokenException;
 import com.limes.backend.exception.persistence.LimesPersistenceException;
 import com.limes.backend.persistence.NativeSqlServices;
 import com.limes.backend.persistence.entity.Assignment;
+import com.limes.backend.persistence.entity.AssignmentPosition;
 import com.limes.backend.persistence.entity.Solution;
 import com.limes.backend.persistence.entity.WeeklyLectureOverview;
 import com.limes.backend.rest.model.LectureOverviewModel;
@@ -114,6 +115,10 @@ public class LectureController extends AbstractController {
             smList.add(new SolutionModel(s.getPicture(), s.getTitle()));
         });
         arm.setSolution(smList);
+        
+        AssignmentPosition position = (AssignmentPosition) NativeSqlServices.executeNativeQueryWithClassEnforceOneLiner(String.format(SQLScripts.GET_ASSIGNMENT_POSITION_IN_LECTURE, req.getWeeklyLectureId(),req.getWeeklyLectureId(),ass.getId()), AssignmentPosition.class);
+        arm.setRemainingAssignmentsInLecture(position.getRemaining());
+        arm.setTotalAssignmentsInLecture(position.getTotal());
         return new ResponseEntity(arm, HttpStatus.OK);
     }
 

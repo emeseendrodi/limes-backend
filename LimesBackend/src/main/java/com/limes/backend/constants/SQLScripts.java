@@ -30,4 +30,5 @@ public class SQLScripts {
     public final static String GET_WEEKS = "select w.id, w.name from week w";
     public final static String GET_WEEKLY_LECTURE_PROGRESSION_FOR_USER = "select wl.id,wl.week_id,(select exists(select * from progression_log pl where pl.student_id = (select s.id from student s where s.email = '%s')and pl.progression_tpye_id = (select pt.id from progression_type pt where pt.name = 'WEEKLY_LECTURE_COMPLETED') and cast(progression_id as integer)=  wl.id)) from weekly_lecture wl";
     public final static String GET_STUDENT = "select s.id,s.email,s.forename,s.surename,s.surename as password from student s where s.email = '%s'";
+    public final static String GET_ASSIGNMENT_POSITION_IN_LECTURE = "with x as( select count(*) as total from assignment a where a.weekly_lecture_id = %d and a.is_test_assignment = false ) , y as( select count(*) as remaining from assignment a2 where a2.weekly_lecture_id = %d and a2.is_test_assignment = false and a2.id > %d ) select * from x,y";
 }
