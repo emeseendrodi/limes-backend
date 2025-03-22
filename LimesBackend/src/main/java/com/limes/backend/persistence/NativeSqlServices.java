@@ -7,27 +7,26 @@ package com.limes.backend.persistence;
 import com.limes.backend.constants.MessageConstants;
 import com.limes.backend.exception.persistence.LimesPersistenceException;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
-
 
 public class NativeSqlServices {
 
-    @PersistenceContext
-    static EntityManager em;
-
-    static {
-        em = DatabaseFactory.getEntityManager();
-    }
-
+//    @PersistenceContext
+//    static EntityManager em;
+//    static {
+//        em = DatabaseFactory.getEntityManager();
+//    }
     public static List<?> executeNativeQueryWithClassEnforce(String sql, Class c) {
-        resetEm();
+//        resetEm();
+        EntityManager em = DatabaseFactory.getEntityManager();
         return em.createNativeQuery(sql, c).getResultList();
     }
 
     public static Object executeNativeQueryWithClassEnforceOneLiner(String sql, Class c) {
-        resetEm();
+//        resetEm();
+        EntityManager em = DatabaseFactory.getEntityManager();
         List result = em.createNativeQuery(sql, c).getResultList();
+        em.close();
         if (result == null || result.isEmpty()) {
             return null;
         }
@@ -35,13 +34,16 @@ public class NativeSqlServices {
     }
 
     public static List<?> executeNativeQuery(String sql) {
-        resetEm();
+//        resetEm();
+        EntityManager em = DatabaseFactory.getEntityManager();
         return em.createNativeQuery(sql).getResultList();
     }
 
     public static Object executeNativeQueryOneLiner(String sql) {
-        resetEm();
+//        resetEm();
+        EntityManager em = DatabaseFactory.getEntityManager();
         List result = em.createNativeQuery(sql).getResultList();
+        em.close();
         if (result == null || result.isEmpty()) {
             return null;
         }
@@ -49,53 +51,56 @@ public class NativeSqlServices {
     }
 
     public static int insertNative(String sql) throws LimesPersistenceException {
+        EntityManager em = DatabaseFactory.getEntityManager();
         em.getTransaction().begin();
         int rowsChanged = em.createNativeQuery(sql).executeUpdate();
         switch (rowsChanged) {
             case 0 -> {
                 em.getTransaction().rollback();
-                resetEm();
+                em.close();
                 throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_INSERT);
             }
             default -> {
                 em.getTransaction().commit();
-                resetEm();
+                em.close();
                 return rowsChanged;
             }
         }
     }
 
     public static int deleteNative(String sql) throws LimesPersistenceException {
+        EntityManager em = DatabaseFactory.getEntityManager();
         em.getTransaction().begin();
         int rowsChanged = em.createNativeQuery(sql).executeUpdate();
         switch (rowsChanged) {
             case 0 -> {
                 em.getTransaction().rollback();
-                resetEm();
+                em.close();
                 throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_INSERT);
             }
             default -> {
                 em.getTransaction().commit();
-                resetEm();
+                em.close();
                 return rowsChanged;
             }
         }
     }
 
     public static Object deleteNativeWithCustomResult(String sql, Class c) throws LimesPersistenceException {
+        EntityManager em = DatabaseFactory.getEntityManager();
         em.getTransaction().begin();
         List result = em.createNativeQuery(sql, c).getResultList();
         if (result == null || result.isEmpty()) {
             em.getTransaction().rollback();
-            resetEm();
+            em.close();
             throw new LimesPersistenceException(MessageConstants.LOG_ERROR_DURING_NATIVE_DELETE);
         }
         em.getTransaction().commit();
-        resetEm();
+        em.close();
         return result.get(0);
     }
 
-    private static void resetEm() {
-        em.clear();
-    }
+//    private static void resetEm() {
+//        em.clear();
+//    }
 }
