@@ -12,10 +12,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- *
- * @author Mate Forster
- */
 @Entity
 @Data
 @AllArgsConstructor

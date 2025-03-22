@@ -4,10 +4,7 @@
  */
 package com.limes.backend.exception.persistence;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class LimesPasswordHelperException extends Throwable{
 
     /**

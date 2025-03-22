@@ -38,10 +38,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * @author Mate Forster
- */
+
 @Slf4j
 @RestController
 public class LectureController extends AbstractController {

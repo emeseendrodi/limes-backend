@@ -4,10 +4,7 @@
  */
 package com.limes.backend.exception.jwt;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class LimesInvalidJwtTokenException extends Throwable {
 
     /**

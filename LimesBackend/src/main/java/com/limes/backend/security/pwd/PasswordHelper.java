@@ -13,10 +13,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- *
- * @author Mate Forster
- */
 @Slf4j
 public class PasswordHelper {
 

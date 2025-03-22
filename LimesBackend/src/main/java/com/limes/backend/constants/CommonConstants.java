@@ -4,10 +4,7 @@
  */
 package com.limes.backend.constants;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class CommonConstants {
 
     public final static String FIRST_TEST_EVENT = "FIRST_TEST_COMPLETED";

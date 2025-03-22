@@ -4,10 +4,7 @@
  */
 package com.limes.backend.constants;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class MessageConstants {
     public static final String LOG_USER_ALLREADY_EXISTS = "Can't register student '%s', because it allready exists!";
     public static final String MESSAGE_USER_ALLREADY_EXISTS = "Hiba! Ezzel az e-mail címmel már létezik tanuló az adatbázisban!";

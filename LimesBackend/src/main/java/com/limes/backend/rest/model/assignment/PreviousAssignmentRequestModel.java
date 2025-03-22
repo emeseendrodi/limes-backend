@@ -4,10 +4,7 @@
  */
 package com.limes.backend.rest.model.assignment;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class PreviousAssignmentRequestModel extends AbstractAssignmentRequestModel{
 
     public PreviousAssignmentRequestModel() {

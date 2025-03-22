@@ -10,10 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class NativeSqlServices {
 
     @PersistenceContext

@@ -4,10 +4,7 @@
  */
 package com.limes.backend.constants;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class SQLScripts {
     public final static String CHECK_STUDENT_ALLREADY_EXISTS = "select exists(select * from student s where s.email = '%s')";
     public final static String INSERT_NEW_STUDENT = "insert into student(email,forename,surename,pwd_hash) values('%s','%s','%s',decode('%s','hex'))";

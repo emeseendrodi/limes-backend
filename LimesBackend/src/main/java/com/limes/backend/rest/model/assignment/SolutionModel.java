@@ -4,10 +4,7 @@
  */
 package com.limes.backend.rest.model.assignment;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class SolutionModel extends AbstractPictureModel{
 
     public SolutionModel() {

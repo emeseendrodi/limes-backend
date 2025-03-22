@@ -20,10 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class JwtService {
 
     private static String key = "625d4ae6115a6d57b15cf2d8f0fed4bb08c7dfe31225c12d9703ada2af1479f4";

@@ -6,10 +6,7 @@ package com.limes.backend.rest.model.assignment;
 
 import com.limes.backend.rest.model.ResultResponseModel;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class SolveAssignmentResponseModel extends ResultResponseModel{
 
     private boolean hasNextAssignmentInLecture;

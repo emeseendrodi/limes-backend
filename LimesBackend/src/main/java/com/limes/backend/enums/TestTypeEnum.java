@@ -4,10 +4,7 @@
  */
 package com.limes.backend.enums;
 
-/**
- *
- * @author Mate Forster
- */
+
 public enum TestTypeEnum {
     FIRST("Próbadolgozat I.","FIRST"),
     SECOND("Próbadolgozat II.","SECOND"),

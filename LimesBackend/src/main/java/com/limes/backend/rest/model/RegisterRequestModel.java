@@ -6,10 +6,7 @@ package com.limes.backend.rest.model;
 
 import com.limes.backend.persistence.entity.Student;
 
-/**
- *
- * @author Mate Forster
- */
+
 public class RegisterRequestModel extends Student{
 
     public RegisterRequestModel(String email, String forename, String surename, String password) {
