@@ -3,10 +3,10 @@
   <persistence-unit name="com.limes_LimesBackend_jar_0.0.1-SNAPSHOTPU">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.100.42:5432/limes"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://db.aimsybnnlnkjehadcomz.supabase.co:5432/postgres"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="Aa12345678"/>
+      <property name="javax.persistence.jdbc.password" value="nBCooEhH5jY7ir9D"/>
     </properties>
   </persistence-unit>
 </persistence>
